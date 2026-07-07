@@ -296,6 +296,7 @@ html, body {
 .marker:hover circle { fill: #ffd15c; }
 .marker.correct circle { fill: var(--green); }
 .marker.missed circle { fill: var(--red); }
+.marker.flash-wrong circle { fill: var(--red-dark) !important; }
 .marker.reveal circle { animation: pulse .5s ease-in-out 3; }
 
 /* Çizgi öğeleri (fay hattı / nehir) */
@@ -317,6 +318,7 @@ html, body {
 .line-feature:hover .line-vis { stroke: #111 !important; stroke-width: 5; }
 .line-feature.correct .line-vis { stroke: var(--green) !important; }
 .line-feature.missed .line-vis { stroke: var(--red) !important; }
+.line-feature.flash-wrong .line-vis { stroke: var(--red-dark) !important; }
 .line-feature.reveal .line-vis { animation: pulseStroke .5s ease-in-out 3; }
 @keyframes pulseStroke { 50% { opacity: .3; } }
 .marker-label {

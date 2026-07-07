@@ -117,8 +117,10 @@
     el.infoTitle.textContent = title;
     el.infoBody.textContent = body || "";
     el.infoCard.className = "info-card" + (cls ? " " + cls : "");
+    clearTimeout(showInfo._t);
+    showInfo._t = setTimeout(hideInfo, 5000); // süreli: rahat okunacak kadar, sonra kaybolur
   }
-  function hideInfo() { el.infoCard.classList.add("hidden"); }
+  function hideInfo() { clearTimeout(showInfo._t); el.infoCard.classList.add("hidden"); }
 
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -336,11 +338,11 @@
         setTimeout(() => t.groups.forEach(g => g.classList.remove("reveal")), 1600);
         setFeedback("Olmadı! Doğru cevap: " + q.name + " (kırmızı bölge)", "bad");
       } else {
-        // Grup modu: doğru kümeyi yeşille açığa çıkar (öğretici)
-        paintGroup(q.plakas, ["correct", "reveal"]);
+        // Grup modu: doğru kümeyi kırmızıyla açığa çıkar
+        paintGroup(q.plakas, ["missed", "reveal"]);
         setTimeout(() => q.plakas.forEach(p =>
           provinces.get(p) && provinces.get(p).groups.forEach(g => g.classList.remove("reveal"))), 1600);
-        setFeedback("Olmadı! " + q.name + " → doğru alan yeşille gösterildi", "bad");
+        setFeedback("Olmadı! " + q.name + " → doğru alan kırmızı ile gösterildi", "bad");
       }
       showInfo("❌ Doğru cevap: " + q.name, q.info, "bad");
       state.locked = true; updateHud();
@@ -367,13 +369,16 @@
       showInfo("✅ " + q.name, q.info, "ok");
     } else {
       state.missed.push({ name: q.name, info: q.info });
-      f.g.classList.add("missed");
+      // Tıklanan yanlış öğe yalnızca kısa süre kırmızı yanıp söner (kalıcı işaretlenmez)
+      f.g.classList.add("flash-wrong");
+      setTimeout(() => f.g.classList.remove("flash-wrong"), 700);
+      // Doğru cevap kırmızı ile açığa çıkar
       const cor = features.get(q.id);
-      cor.g.classList.add("correct", "reveal");
+      cor.g.classList.add("missed", "reveal");
       labelFeature(q.id);
       setTimeout(() => cor.g.classList.remove("reveal"), 1600);
       showTooltip(x, y, f.name + " ✘", "bad");
-      setFeedback("Olmadı! Doğru cevap: " + q.name + " (açığa çıktı)", "bad");
+      setFeedback("Olmadı! Doğru cevap: " + q.name + " (kırmızı gösterildi)", "bad");
       showInfo("❌ Doğru cevap: " + q.name, q.info, "bad");
     }
     state.locked = true; updateHud();
