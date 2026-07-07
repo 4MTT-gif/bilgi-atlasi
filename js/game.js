@@ -250,6 +250,7 @@
     state.index = 0; state.score = 0; state.correct = 0; state.missed = []; state.locked = false;
 
     clearProvinceStyles();
+    hideInfo(); // yeni konuya geçerken önceki bilgi kartını temizle
     resetView();
     el.pillIcon.textContent = mode.icon;
     el.pillName.textContent = mode.name;
@@ -277,7 +278,7 @@
   function nextQuestion(first) {
     if (!first) state.index++;
     state.tries = state.mode.tries;
-    hideInfo();
+    // Bilgi kartı gizlenmez: bir önceki cevabın bilgisi, yeni soru cevaplanana kadar ekranda kalır
     if (state.index >= total()) { endGame(); return; }
     // Grup modunda her soru bağımsız — harita boyamalarını temizle (küme çakışmaları için)
     if (state.mode.type === "group") clearProvinceStyles();
@@ -313,7 +314,7 @@
       setFeedback("Doğru! " + q.name + " (+" + pts + " puan)", "ok");
       showInfo("✅ " + q.name, q.info, "ok");
       state.locked = true;
-      setTimeout(() => nextQuestion(), mode.type === "province" ? 1100 : 1700);
+      setTimeout(() => nextQuestion(), mode.type === "province" ? 700 : 1000);
       return;
     }
 
@@ -338,7 +339,7 @@
       }
       showInfo("❌ Doğru cevap: " + q.name, q.info, "bad");
       state.locked = true; updateHud();
-      setTimeout(() => nextQuestion(), mode.type === "province" ? 2000 : 2400);
+      setTimeout(() => nextQuestion(), mode.type === "province" ? 1300 : 1600);
     } else {
       setFeedback("Yanlış: " + clicked.name + " — tekrar dene! (" + state.tries + " hak kaldı)", "bad");
       updateHud();
@@ -371,7 +372,7 @@
       showInfo("❌ Doğru cevap: " + q.name, q.info, "bad");
     }
     state.locked = true; updateHud();
-    setTimeout(() => nextQuestion(), state.missed.length && id !== q.id ? 2400 : 1700);
+    setTimeout(() => nextQuestion(), id !== q.id ? 1600 : 1000);
   }
 
   // ---------- Sonuç ----------
