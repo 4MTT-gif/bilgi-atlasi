@@ -2,21 +2,27 @@
 
 YKS ve KPSS'ye hazırlanan öğrenciler için **tarih ve coğrafya** odaklı, oyunlaştırılmış test uygulaması.
 
-## 🗺️ Modüller
+## 🌍 Coğrafya Modülleri
 
-| Modül | Durum |
-|---|---|
-| **Türkiye Haritası: Şehir Bulma** — sana verilen ili haritada bul | ✅ Hazır |
-| Tarih Testleri | 🔜 Yakında |
-| Coğrafya Testleri | 🔜 Yakında |
+Hepsi Türkiye haritası üzerinde, tek çatı altında:
+
+| Mod | Anlatım | Hak |
+|---|---|---|
+| 🏙️ **İller** | Verilen ili haritada bul | 3 deneme (100/60/30 puan) |
+| 🧩 **Bölgeler** | Sorulan coğrafi bölgeyi bul — o bölgeden bir ile tıkla | Tek hak |
+| 💧 **Göller** | Haritadaki noktalardan sorulan gölü bul | Tek hak |
+| ⛰️ **Dağlar** | Haritadaki noktalardan sorulan dağı bul | Tek hak |
+| 🟤 **Toprak Türleri** | Sorulan toprak türünün görüldüğü yeri seç | Tek hak |
+
+**Tarih** modülü yakında.
 
 ## 🎮 Nasıl Oynanır?
 
-1. Sana rastgele bir il adı verilir (ör. **"Bul: Ankara"**).
-2. Haritada o ili bulup tıkla — tıkladığın ilin adı ekranda gösterilir.
-3. **Doğru** bilirsen il **yeşil** boyanır ve puan kazanırsın (ilk denemede 100, ikincide 60, üçüncüde 30 puan).
-4. 3 denemede bulamazsan il **kırmızı** boyanır ve doğru cevap gösterilir.
-5. 81 ilin tamamını bitirene kadar devam edebilirsin!
+1. Ana menüden **Coğrafya**'yı, ardından bir mod seç.
+2. Sana rastgele bir hedef verilir (ör. **"Bul: Van Gölü"**).
+3. Haritadan/noktalardan doğru olanı seç. **Doğru** cevap **yeşil**, yanlışta doğru cevap açığa çıkar.
+4. İl modunda 3 deneme hakkın var; diğer modlarda **tek hak** — ilk tıklaman geçerli!
+5. Modun tüm sorularını bitirdiğinde puanın ve bilemediklerin listelenir.
 
 Harita üzerinde **yakınlaştırma** (fare tekerleği / iki parmak) ve **kaydırma** (sürükleme) desteklenir.
 
