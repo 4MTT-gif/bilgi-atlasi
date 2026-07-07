@@ -314,9 +314,9 @@ html, body {
   transition: stroke .2s;
   pointer-events: none;
 }
-.line-feature:hover .line-vis { stroke: #ffd15c; }
-.line-feature.correct .line-vis { stroke: var(--green); }
-.line-feature.missed .line-vis { stroke: var(--red); }
+.line-feature:hover .line-vis { stroke: #111 !important; stroke-width: 5; }
+.line-feature.correct .line-vis { stroke: var(--green) !important; }
+.line-feature.missed .line-vis { stroke: var(--red) !important; }
 .line-feature.reveal .line-vis { animation: pulseStroke .5s ease-in-out 3; }
 @keyframes pulseStroke { 50% { opacity: .3; } }
 .marker-label {

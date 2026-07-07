@@ -8,6 +8,9 @@
   const GEO = window.GEO;
   const SVGNS = "http://www.w3.org/2000/svg";
 
+  // Çizgi/ok öğeleri için birbirinden ayırt edilebilir renk paleti
+  const LINE_PALETTE = ["#e11d48", "#2563eb", "#16a34a", "#9333ea", "#ea580c", "#0891b2", "#db2777", "#65a30d"];
+
   // ---------- Ekran yönetimi ----------
   const screens = {
     menu: document.getElementById("menu-screen"),
@@ -194,6 +197,7 @@
     featureLayer = document.createElementNS(SVGNS, "g");
     labelLayer = document.createElementNS(SVGNS, "g");
 
+    let lineIdx = 0;
     list.forEach((item, i) => {
       const id = String(i);
       const g = document.createElementNS(SVGNS, "g");
@@ -212,6 +216,7 @@
         const vis = document.createElementNS(SVGNS, "polyline");
         vis.setAttribute("points", str);
         vis.setAttribute("class", "line-vis" + (item.arrow ? " wind" : ""));
+        vis.style.stroke = item.color || LINE_PALETTE[lineIdx++ % LINE_PALETTE.length];
         if (item.arrow) vis.setAttribute("marker-end", "url(#wind-arrow)");
         g.appendChild(hit); g.appendChild(vis);
         const mid = pts[Math.floor(pts.length / 2)];
