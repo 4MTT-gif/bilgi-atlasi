@@ -36,6 +36,10 @@
     provinces.get(pk).groups.push(g);
   });
 
+  // Plaka -> bölge adı (il modunda bilgi kartı için)
+  const regionOf = {};
+  GEO.topics.bolgeler.groups.forEach(g => g.plakas.forEach(pk => (regionOf[pk] = g.name)));
+
   // Bir ilin merkezini (bbox ortası) SVG koordinatında hesapla
   function center(pk) {
     const p = provinces.get(pk);
@@ -101,7 +105,17 @@
     fill: document.getElementById("progress-fill"),
     feedback: document.getElementById("feedback-bar"),
     tooltip: document.getElementById("tooltip"),
+    infoCard: document.getElementById("info-card"),
+    infoTitle: document.getElementById("info-title"),
+    infoBody: document.getElementById("info-body"),
   };
+
+  function showInfo(title, body, cls) {
+    el.infoTitle.textContent = title;
+    el.infoBody.textContent = body || "";
+    el.infoCard.className = "info-card" + (cls ? " " + cls : "");
+  }
+  function hideInfo() { el.infoCard.classList.add("hidden"); }
 
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -156,9 +170,27 @@
     mapWrap.classList.remove("mode-point");
   }
 
+  function ensureArrowDefs() {
+    if (svg.querySelector("#wind-arrow")) return;
+    const defs = document.createElementNS(SVGNS, "defs");
+    const marker = document.createElementNS(SVGNS, "marker");
+    marker.setAttribute("id", "wind-arrow");
+    marker.setAttribute("markerUnits", "userSpaceOnUse");
+    marker.setAttribute("markerWidth", "16"); marker.setAttribute("markerHeight", "16");
+    marker.setAttribute("viewBox", "0 0 10 10");
+    marker.setAttribute("refX", "8"); marker.setAttribute("refY", "5");
+    marker.setAttribute("orient", "auto");
+    const path = document.createElementNS(SVGNS, "path");
+    path.setAttribute("d", "M0,0 L10,5 L0,10 z");
+    path.setAttribute("fill", "context-stroke");
+    marker.appendChild(path); defs.appendChild(marker);
+    svg.insertBefore(defs, svg.firstChild);
+  }
+
   function buildFeatures(list) {
     clearFeatures();
     mapWrap.classList.add("mode-point");
+    if (list.some(f => f.arrow)) ensureArrowDefs();
     featureLayer = document.createElementNS(SVGNS, "g");
     labelLayer = document.createElementNS(SVGNS, "g");
 
@@ -179,7 +211,8 @@
         // Görünür çizgi
         const vis = document.createElementNS(SVGNS, "polyline");
         vis.setAttribute("points", str);
-        vis.setAttribute("class", "line-vis");
+        vis.setAttribute("class", "line-vis" + (item.arrow ? " wind" : ""));
+        if (item.arrow) vis.setAttribute("marker-end", "url(#wind-arrow)");
         g.appendChild(hit); g.appendChild(vis);
         const mid = pts[Math.floor(pts.length / 2)];
         lx = mid.x; ly = mid.y - 4;
@@ -226,13 +259,16 @@
     if (mode.type === "province") {
       clearFeatures();
       const keys = mode.allProvinces ? [...provinces.keys()] : mode.items.map(x => x.pk);
-      state.questions = shuffle(keys).map(pk => ({ name: provinces.get(pk).name, pk }));
+      state.questions = shuffle(keys).map(pk => ({
+        name: provinces.get(pk).name, pk,
+        info: "Plaka " + pk + (regionOf[pk] ? " · " + regionOf[pk] : ""),
+      }));
     } else if (mode.type === "group") {
       clearFeatures();
-      state.questions = shuffle(mode.groups.map(g => ({ name: g.name, plakas: g.plakas })));
+      state.questions = shuffle(mode.groups.map(g => ({ name: g.name, plakas: g.plakas, info: g.info })));
     } else { // features
       buildFeatures(mode.features);
-      state.questions = shuffle(mode.features.map((f, i) => ({ name: f.name, id: String(i) })));
+      state.questions = shuffle(mode.features.map((f, i) => ({ name: f.name, id: String(i), info: f.info })));
     }
 
     nextQuestion(true);
@@ -241,6 +277,7 @@
   function nextQuestion(first) {
     if (!first) state.index++;
     state.tries = state.mode.tries;
+    hideInfo();
     if (state.index >= total()) { endGame(); return; }
     // Grup modunda her soru bağımsız — harita boyamalarını temizle (küme çakışmaları için)
     if (state.mode.type === "group") clearProvinceStyles();
@@ -274,8 +311,9 @@
       else paintGroup(q.plakas, ["correct", "done"]);
       showTooltip(x, y, q.name + " ✔ +" + pts, "ok");
       setFeedback("Doğru! " + q.name + " (+" + pts + " puan)", "ok");
+      showInfo("✅ " + q.name, q.info, "ok");
       state.locked = true;
-      setTimeout(() => nextQuestion(), mode.type === "province" ? 900 : 1100);
+      setTimeout(() => nextQuestion(), mode.type === "province" ? 1100 : 1700);
       return;
     }
 
@@ -285,7 +323,7 @@
     setTimeout(() => clicked.groups.forEach(g => g.classList.remove("flash-wrong")), 800);
 
     if (state.tries <= 0) {
-      state.missed.push(q.name);
+      state.missed.push({ name: q.name, info: q.info });
       if (mode.type === "province") {
         const t = provinces.get(q.pk);
         t.groups.forEach(g => g.classList.add("missed", "done", "reveal"));
@@ -298,8 +336,9 @@
           provinces.get(p) && provinces.get(p).groups.forEach(g => g.classList.remove("reveal"))), 1600);
         setFeedback("Olmadı! " + q.name + " → doğru alan yeşille gösterildi", "bad");
       }
+      showInfo("❌ Doğru cevap: " + q.name, q.info, "bad");
       state.locked = true; updateHud();
-      setTimeout(() => nextQuestion(), 1800);
+      setTimeout(() => nextQuestion(), mode.type === "province" ? 2000 : 2400);
     } else {
       setFeedback("Yanlış: " + clicked.name + " — tekrar dene! (" + state.tries + " hak kaldı)", "bad");
       updateHud();
@@ -319,8 +358,9 @@
       labelFeature(id);
       showTooltip(x, y, q.name + " ✔ +" + pts, "ok");
       setFeedback("Doğru! " + q.name + " (+" + pts + " puan)", "ok");
+      showInfo("✅ " + q.name, q.info, "ok");
     } else {
-      state.missed.push(q.name);
+      state.missed.push({ name: q.name, info: q.info });
       f.g.classList.add("missed");
       const cor = features.get(q.id);
       cor.g.classList.add("correct", "reveal");
@@ -328,9 +368,10 @@
       setTimeout(() => cor.g.classList.remove("reveal"), 1600);
       showTooltip(x, y, f.name + " ✘", "bad");
       setFeedback("Olmadı! Doğru cevap: " + q.name + " (açığa çıktı)", "bad");
+      showInfo("❌ Doğru cevap: " + q.name, q.info, "bad");
     }
     state.locked = true; updateHud();
-    setTimeout(() => nextQuestion(), 1400);
+    setTimeout(() => nextQuestion(), state.missed.length && id !== q.id ? 2400 : 1700);
   }
 
   // ---------- Sonuç ----------
@@ -344,9 +385,22 @@
     document.getElementById("result-correct").textContent = state.correct;
     document.getElementById("result-wrong").textContent = state.missed.length;
     const missedBox = document.getElementById("result-missed");
+    const list = document.getElementById("missed-list");
     if (state.missed.length > 0) {
       missedBox.classList.remove("hidden");
-      document.getElementById("missed-list").textContent = state.missed.join(", ");
+      list.innerHTML = "";
+      state.missed.forEach(m => {
+        const item = document.createElement("div");
+        item.className = "missed-item";
+        const nm = document.createElement("div");
+        nm.className = "mi-name";
+        nm.textContent = m.name;
+        const inf = document.createElement("div");
+        inf.className = "mi-info";
+        inf.textContent = m.info || "";
+        item.appendChild(nm); item.appendChild(inf);
+        list.appendChild(item);
+      });
     } else missedBox.classList.add("hidden");
     showScreen("result");
   }

@@ -83,6 +83,10 @@
         <button id="zoom-out" title="Uzaklaştır">−</button>
         <button id="zoom-reset" title="Sıfırla">⤢</button>
       </div>
+      <div id="info-card" class="info-card hidden">
+        <div id="info-title" class="ic-title"></div>
+        <div id="info-body" class="ic-body"></div>
+      </div>
     </div>
 
     <div id="feedback-bar" class="feedback-bar">Haritadan seç</div>
@@ -100,8 +104,8 @@
         <div class="result-stat"><span id="result-wrong">0</span><label>Bilinemeyen</label></div>
       </div>
       <div id="result-missed" class="result-missed hidden">
-        <h3>Bilemediklerin:</h3>
-        <p id="missed-list"></p>
+        <h3>Bilemediklerin — kısa özet:</h3>
+        <div id="missed-list" class="missed-list"></div>
       </div>
       <div class="result-buttons">
         <button id="btn-again" class="btn-primary">🔄 Tekrar Oyna</button>

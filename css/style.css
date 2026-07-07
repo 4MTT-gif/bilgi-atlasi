@@ -48,16 +48,20 @@ html, body {
 /* ============ Menü kabuğu ============ */
 #menu-screen.active, #cografya-screen.active {
   align-items: center;
-  justify-content: center;
   padding: 1.5rem;
   overflow-y: auto;
 }
+/* Ana menü kısa: dikeyde ortala. Coğrafya uzun: üstten başlat ki taşan içerik kırpılmasın. */
+#menu-screen.active { justify-content: center; }
+#cografya-screen.active { justify-content: flex-start; }
 .menu-inner {
   width: min(560px, 100%);
+  margin: auto;
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
 }
+#cografya-screen .menu-inner { margin: 0 auto; }
 
 /* ============ Ana Menü ============ */
 .menu-header { text-align: center; }
@@ -324,6 +328,33 @@ html, body {
   pointer-events: none;
 }
 
+/* Rüzgâr yön okları biraz daha belirgin */
+.line-vis.wind { stroke-width: 4; }
+
+/* ============ Bilgi kartı (cevap sonrası) ============ */
+.info-card {
+  position: absolute;
+  left: 50%;
+  bottom: .8rem;
+  transform: translateX(-50%);
+  width: min(440px, calc(100% - 1.4rem));
+  background: rgba(255,255,255,.97);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--accent);
+  border-radius: 12px;
+  padding: .6rem .85rem;
+  box-shadow: var(--shadow);
+  z-index: 8;
+  animation: infoUp .25s ease;
+}
+.info-card.ok  { border-left-color: var(--green); }
+.info-card.bad { border-left-color: var(--red); }
+.ic-title { font-weight: 800; font-size: .98rem; margin-bottom: .15rem; }
+.info-card.ok  .ic-title { color: var(--green-dark); }
+.info-card.bad .ic-title { color: var(--red-dark); }
+.ic-body { color: var(--text-soft); font-size: .86rem; line-height: 1.4; }
+@keyframes infoUp { from { opacity: 0; transform: translate(-50%, 10px); } }
+
 /* ============ İpucu balonu ============ */
 .tooltip {
   position: absolute;
@@ -400,8 +431,17 @@ html, body {
   background: var(--red-soft); border: 1px solid #f6cfce;
   border-radius: 14px; padding: .8rem 1rem;
 }
-.result-missed h3 { font-size: .9rem; color: var(--red-dark); margin-bottom: .35rem; }
-.result-missed p { color: var(--text-soft); font-size: .88rem; line-height: 1.5; }
+.result-missed h3 { font-size: .9rem; color: var(--red-dark); margin-bottom: .5rem; }
+.missed-list { display: flex; flex-direction: column; gap: .5rem; }
+.missed-item {
+  background: #fff;
+  border: 1px solid #f6cfce;
+  border-left: 4px solid var(--red);
+  border-radius: 10px;
+  padding: .45rem .6rem;
+}
+.mi-name { font-weight: 700; font-size: .88rem; color: var(--red-dark); }
+.mi-info { color: var(--text-soft); font-size: .82rem; line-height: 1.4; margin-top: .1rem; }
 
 .result-buttons { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
 .btn-primary, .btn-secondary {
