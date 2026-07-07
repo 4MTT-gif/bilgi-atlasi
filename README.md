@@ -4,15 +4,15 @@ YKS ve KPSS'ye hazırlanan öğrenciler için **tarih ve coğrafya** odaklı, oy
 
 ## 🌍 Coğrafya Modülleri
 
-Hepsi Türkiye haritası üzerinde, tek çatı altında:
+Hepsi Türkiye haritası üzerinde, kategoriler halinde. İl modu 3 deneme (100/60/30 puan), diğer tüm modlar **tek deneme** (100 puan):
 
-| Mod | Anlatım | Hak |
-|---|---|---|
-| 🏙️ **İller** | Verilen ili haritada bul | 3 deneme (100/60/30 puan) |
-| 🧩 **Bölgeler** | Sorulan coğrafi bölgeyi bul — o bölgeden bir ile tıkla | Tek hak |
-| 💧 **Göller** | Haritadaki noktalardan sorulan gölü bul | Tek hak |
-| ⛰️ **Dağlar** | Haritadaki noktalardan sorulan dağı bul | Tek hak |
-| 🟤 **Toprak Türleri** | Sorulan toprak türünün görüldüğü yeri seç | Tek hak |
+- **🗺️ Harita Bilgisi:** İller, Coğrafi Bölgeler
+- **🏔️ Yer Şekilleri ve Yer'in Kuvvetleri:** Türkiye'nin Yer Şekilleri (ova/plato/boğaz), İç Kuvvetler (fay hatları + volkanik dağlar), Dış Kuvvetler (akarsular + karst), Dağlar, Göller
+- **🌦️ İklim Bilgisi:** İklim Tipleri, Atmosfer ve Sıcaklık, Basınç ve Rüzgârlar, Nem–Yağış–Buharlaşma
+- **🌱 Su, Toprak ve Bitki:** Bitki Örtüsü, Toprak Türleri
+- **👥 Beşeri ve Ekonomik:** Nüfus, Göç, Yerleşme, Ekonomik Faaliyetler
+
+Etkileşim üç biçimde: bir **ile** tıkla, bir **kümeden** (bölge/iklim/ürün alanı) herhangi bir ile tıkla, ya da haritaya çizilen **nokta/çizgi** öğelerden (göl, dağ, fay hattı, nehir) doğru olanı seç. Fay hattı ve nehirler, geçtikleri illerin merkezleri birleştirilerek yaklaşık güzergâhla çizilir.
 
 **Tarih** modülü yakında.
 

@@ -151,6 +151,14 @@ html, body {
 }
 .btn-back:hover { border-color: #bcd7f6; }
 
+#topic-container { display: flex; flex-direction: column; gap: 1.4rem; }
+.cat-section { display: flex; flex-direction: column; gap: .7rem; }
+.cat-title {
+  font-size: .82rem; font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-soft);
+  padding-left: .2rem;
+}
 .mode-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -285,6 +293,28 @@ html, body {
 .marker.correct circle { fill: var(--green); }
 .marker.missed circle { fill: var(--red); }
 .marker.reveal circle { animation: pulse .5s ease-in-out 3; }
+
+/* Çizgi öğeleri (fay hattı / nehir) */
+.line-feature { cursor: pointer; }
+.line-hit {
+  fill: none; stroke: transparent; stroke-width: 16;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round; stroke-linejoin: round;
+  pointer-events: stroke;
+}
+.line-vis {
+  fill: none; stroke: var(--gold); stroke-width: 3.5;
+  stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 1.5px rgba(20,50,79,.35));
+  transition: stroke .2s;
+  pointer-events: none;
+}
+.line-feature:hover .line-vis { stroke: #ffd15c; }
+.line-feature.correct .line-vis { stroke: var(--green); }
+.line-feature.missed .line-vis { stroke: var(--red); }
+.line-feature.reveal .line-vis { animation: pulseStroke .5s ease-in-out 3; }
+@keyframes pulseStroke { 50% { opacity: .3; } }
 .marker-label {
   font: 700 12px "Segoe UI", sans-serif;
   fill: var(--text);
