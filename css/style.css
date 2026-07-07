@@ -1,0 +1,254 @@
+/* ============ Genel ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0f1b2d;
+  --panel: #16263f;
+  --panel-2: #1d3050;
+  --text: #eaf1fb;
+  --muted: #8fa5c4;
+  --accent: #4da3ff;
+  --green: #2ecc71;
+  --green-dark: #27ae60;
+  --red: #e74c3c;
+  --red-dark: #c0392b;
+  --map-fill: #33507a;
+  --map-stroke: #0f1b2d;
+  --map-hover: #476b9e;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.screen { display: none; height: 100vh; height: 100dvh; }
+.screen.active { display: flex; flex-direction: column; }
+.hidden { display: none !important; }
+
+/* ============ Ana Menü ============ */
+#menu-screen.active {
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.menu-header { text-align: center; }
+.menu-header h1 { font-size: 2.6rem; letter-spacing: 1px; }
+.subtitle { color: var(--muted); margin-top: .4rem; font-size: 1.05rem; }
+
+.menu-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: min(480px, 100%);
+}
+
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--panel-2);
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform .15s, border-color .15s, background .15s;
+  font: inherit;
+}
+.menu-card:not(.disabled):hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--panel-2);
+}
+.menu-card.disabled { opacity: .45; cursor: not-allowed; }
+.card-icon { font-size: 1.6rem; }
+.card-title { font-size: 1.15rem; font-weight: 600; }
+.card-desc { color: var(--muted); font-size: .9rem; }
+
+.menu-footer { color: var(--muted); font-size: .78rem; }
+.menu-footer a { color: var(--accent); }
+
+/* ============ Oyun Ekranı ============ */
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .6rem .9rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--panel-2);
+  flex-wrap: wrap;
+}
+
+.btn-small {
+  background: var(--panel-2);
+  border: none;
+  color: var(--text);
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-small:hover { background: var(--red-dark); }
+
+.target-box {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  flex: 1;
+  min-width: 150px;
+}
+.target-label { color: var(--muted); font-size: .95rem; }
+.target-name { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
+
+.stats {
+  display: flex;
+  gap: .9rem;
+  font-size: .92rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ============ Harita ============ */
+#map-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+
+#map-container { width: 100%; height: 100%; cursor: grab; }
+#map-container.dragging { cursor: grabbing; }
+#map-container svg { width: 100%; height: 100%; display: block; }
+
+#map-container svg g[data-iladi] path {
+  fill: var(--map-fill);
+  stroke: var(--map-stroke);
+  stroke-width: 1;
+  transition: fill .2s;
+}
+#map-container svg g[data-iladi]:not(.done):not(.locked):hover path {
+  fill: var(--map-hover);
+  cursor: pointer;
+}
+
+/* Kıbrıs oyun dışı */
+#map-container svg #kibris path {
+  fill: #1a2a44;
+  pointer-events: none;
+}
+
+#map-container svg g.correct path { fill: var(--green) !important; }
+#map-container svg g.missed  path { fill: var(--red) !important; }
+#map-container svg g.flash-wrong path { fill: var(--red-dark) !important; }
+#map-container svg g.reveal path {
+  fill: var(--green-dark) !important;
+  animation: pulse .5s ease-in-out 3;
+}
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* ============ İpucu balonu ============ */
+.tooltip {
+  position: absolute;
+  background: rgba(10, 18, 32, .95);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: .35rem .7rem;
+  border-radius: 8px;
+  font-size: .95rem;
+  font-weight: 600;
+  pointer-events: none;
+  transform: translate(-50%, -130%);
+  white-space: nowrap;
+  z-index: 10;
+}
+.tooltip.ok  { border-color: var(--green); color: var(--green); }
+.tooltip.bad { border-color: var(--red);   color: var(--red); }
+
+/* ============ Zoom ============ */
+.zoom-controls {
+  position: absolute;
+  right: .8rem;
+  bottom: .8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  z-index: 5;
+}
+.zoom-controls button {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--panel-2);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.zoom-controls button:hover { background: var(--panel-2); }
+
+/* ============ Geri bildirim çubuğu ============ */
+.feedback-bar {
+  padding: .55rem .9rem;
+  text-align: center;
+  background: var(--panel);
+  border-top: 1px solid var(--panel-2);
+  font-size: .95rem;
+  color: var(--muted);
+  min-height: 2.4rem;
+}
+.feedback-bar.ok  { color: var(--green); font-weight: 600; }
+.feedback-bar.bad { color: var(--red);   font-weight: 600; }
+
+/* ============ Sonuç Ekranı ============ */
+#result-screen.active { align-items: center; justify-content: center; padding: 1.5rem; }
+
+.result-box {
+  background: var(--panel);
+  border: 1px solid var(--panel-2);
+  border-radius: 18px;
+  padding: 2rem;
+  width: min(480px, 100%);
+  text-align: center;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.result-box h2 { margin-bottom: 1.3rem; }
+
+.result-stats { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.3rem; }
+.result-stat { display: flex; flex-direction: column; }
+.result-stat span { font-size: 2rem; font-weight: 700; color: var(--accent); }
+.result-stat label { color: var(--muted); font-size: .85rem; }
+
+.result-missed { text-align: left; margin-bottom: 1.3rem; }
+.result-missed h3 { font-size: .95rem; color: var(--red); margin-bottom: .4rem; }
+.result-missed p { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+
+.result-buttons { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; }
+
+.btn-primary, .btn-secondary {
+  padding: .7rem 1.4rem;
+  border-radius: 10px;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary { background: var(--accent); color: #06111f; }
+.btn-primary:hover { filter: brightness(1.15); }
+.btn-secondary { background: var(--panel-2); color: var(--text); }
+.btn-secondary:hover { filter: brightness(1.2); }
+
+/* ============ Mobil ============ */
+@media (max-width: 600px) {
+  .menu-header h1 { font-size: 2rem; }
+  .target-name { font-size: 1.15rem; }
+  .stats { gap: .55rem; font-size: .82rem; }
+  .game-header { padding: .5rem .6rem; gap: .5rem; }
+}

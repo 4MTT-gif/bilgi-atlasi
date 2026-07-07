@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="YKS ve KPSS'ye yönelik tarih ve coğrafya testleri. Türkiye haritası üzerinde şehir bulma oyunu.">
+  <title>Bilgi Atlası — YKS &amp; KPSS Tarih ve Coğrafya</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ANA MENÜ -->
+  <section id="menu-screen" class="screen active">
+    <header class="menu-header">
+      <h1>🧭 Bilgi Atlası</h1>
+      <p class="subtitle">YKS &amp; KPSS — Tarih ve Coğrafya</p>
+    </header>
+    <div class="menu-cards">
+      <button class="menu-card" id="btn-harita-oyunu">
+        <span class="card-icon">🗺️</span>
+        <span class="card-title">Türkiye Haritası: Şehir Bulma</span>
+        <span class="card-desc">Sana verilen şehri harita üzerinde bul. 81 ilin tamamını bitirebilir misin?</span>
+      </button>
+      <button class="menu-card disabled" disabled>
+        <span class="card-icon">📜</span>
+        <span class="card-title">Tarih Testleri</span>
+        <span class="card-desc">Yakında…</span>
+      </button>
+      <button class="menu-card disabled" disabled>
+        <span class="card-icon">🌍</span>
+        <span class="card-title">Coğrafya Testleri</span>
+        <span class="card-desc">Yakında…</span>
+      </button>
+    </div>
+    <footer class="menu-footer">
+      Harita: <a href="https://github.com/dnomak/svg-turkiye-haritasi" target="_blank" rel="noopener">dnomak/svg-turkiye-haritasi</a> (MIT)
+    </footer>
+  </section>
+
+  <!-- OYUN EKRANI -->
+  <section id="game-screen" class="screen">
+    <header class="game-header">
+      <button id="btn-menu" class="btn-small" title="Menüye dön">✕</button>
+      <div class="target-box">
+        <span class="target-label">Bul:</span>
+        <span id="target-name" class="target-name">—</span>
+      </div>
+      <div class="stats">
+        <span id="stat-score" title="Puan">⭐ 0</span>
+        <span id="stat-correct" title="Doğru">✅ 0</span>
+        <span id="stat-wrong" title="Yanlış">❌ 0</span>
+        <span id="stat-progress" title="İlerleme">0/81</span>
+        <span id="stat-tries" title="Kalan deneme">💙💙💙</span>
+      </div>
+    </header>
+
+    <div id="map-wrap">
+      <div id="map-container"></div>
+      <div id="tooltip" class="tooltip hidden"></div>
+      <div class="zoom-controls">
+        <button id="zoom-in" title="Yakınlaştır">+</button>
+        <button id="zoom-out" title="Uzaklaştır">−</button>
+        <button id="zoom-reset" title="Sıfırla">⤢</button>
+      </div>
+    </div>
+
+    <div id="feedback-bar" class="feedback-bar">Haritadan bir il seç</div>
+  </section>
+
+  <!-- SONUÇ EKRANI -->
+  <section id="result-screen" class="screen">
+    <div class="result-box">
+      <h2>🎉 Oyun Bitti!</h2>
+      <div class="result-stats">
+        <div class="result-stat"><span id="result-score">0</span><label>Puan</label></div>
+        <div class="result-stat"><span id="result-correct">0</span><label>Doğru</label></div>
+        <div class="result-stat"><span id="result-wrong">0</span><label>Bilinemeyen</label></div>
+      </div>
+      <div id="result-missed" class="result-missed hidden">
+        <h3>Bilemediğin iller:</h3>
+        <p id="missed-list"></p>
+      </div>
+      <div class="result-buttons">
+        <button id="btn-again" class="btn-primary">🔄 Tekrar Oyna</button>
+        <button id="btn-result-menu" class="btn-secondary">🏠 Ana Menü</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/turkiye-map.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

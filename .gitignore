@@ -1,0 +1,17 @@
+# Bağımlılıklar (ileride Capacitor için)
+node_modules/
+
+# Derleme çıktıları
+dist/
+build/
+android/
+ios/
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editör
+.vscode/
+.idea/
